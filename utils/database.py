@@ -1,0 +1,157 @@
+import sqlite3
+import json
+import logging
+import config
+
+logger = logging.getLogger(__name__)
+
+def get_db_connection() -> sqlite3.Connection:
+    """
+    Establishes and returns a connection to the SQLite database.
+    Sets row_factory to sqlite3.Row for dictionary-like access.
+    """
+    conn = sqlite3.connect(config.DATABASE_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db() -> None:
+    """
+    Initializes the database tables (analyses, interviews) if they do not exist.
+    """
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        
+        # Table 1: Store placement analysis findings
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS analyses (
+                id TEXT PRIMARY KEY,
+                resume_filename TEXT NOT NULL,
+                company_name TEXT NOT NULL,
+                job_description TEXT,
+                results_json TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # Table 2: Store mock interview progress & evaluations
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS interviews (
+                id TEXT PRIMARY KEY,
+                analysis_id TEXT NOT NULL,
+                current_question_index INTEGER NOT NULL DEFAULT 0,
+                questions_json TEXT NOT NULL,
+                answers_json TEXT NOT NULL,
+                completed INTEGER NOT NULL DEFAULT 0,
+                FOREIGN KEY (analysis_id) REFERENCES analyses (id)
+            )
+        """)
+        
+        conn.commit()
+        logger.info("Database schema checked and initialized successfully.")
+    except Exception as e:
+        logger.error(f"Failed to initialize SQLite database: {str(e)}")
+        raise e
+    finally:
+        conn.close()
+
+def save_analysis(analysis_id: str, resume_filename: str, company_name: str, job_description: str, results_dict: dict) -> None:
+    """
+    Inserts a newly generated coordinator analysis into the database.
+    """
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO analyses (id, resume_filename, company_name, job_description, results_json)
+            VALUES (?, ?, ?, ?, ?)
+        """, (analysis_id, resume_filename, company_name, job_description, json.dumps(results_dict)))
+        conn.commit()
+        logger.info(f"Analysis saved to database with ID: {analysis_id}")
+    except Exception as e:
+        logger.error(f"Error saving analysis {analysis_id} to database: {str(e)}")
+        raise e
+    finally:
+        conn.close()
+
+def get_analysis(analysis_id: str) -> dict:
+    """
+    Retrieves and returns an analysis record by ID.
+    Loads and injects the deserialized JSON results.
+    """
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM analyses WHERE id = ?", (analysis_id,))
+        row = cursor.fetchone()
+        if row:
+            record = dict(row)
+            record["results"] = json.loads(record["results_json"])
+            return record
+        return None
+    except Exception as e:
+        logger.error(f"Error fetching analysis {analysis_id}: {str(e)}")
+        raise e
+    finally:
+        conn.close()
+
+def create_interview_session(interview_id: str, analysis_id: str, questions_list: list) -> None:
+    """
+    Creates a new mock interview session referencing an analysis.
+    Stores the list of 15 generated questions (HR, Technical, Behavioral).
+    """
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO interviews (id, analysis_id, current_question_index, questions_json, answers_json, completed)
+            VALUES (?, ?, 0, ?, ?, 0)
+        """, (interview_id, analysis_id, json.dumps(questions_list), json.dumps([])))
+        conn.commit()
+        logger.info(f"Interview session initialized with ID: {interview_id}")
+    except Exception as e:
+        logger.error(f"Error initializing interview session {interview_id}: {str(e)}")
+        raise e
+    finally:
+        conn.close()
+
+def get_interview_session(interview_id: str) -> dict:
+    """
+    Retrieves and returns an interview session record by ID.
+    """
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM interviews WHERE id = ?", (interview_id,))
+        row = cursor.fetchone()
+        if row:
+            record = dict(row)
+            record["questions"] = json.loads(record["questions_json"])
+            record["answers"] = json.loads(record["answers_json"])
+            return record
+        return None
+    except Exception as e:
+        logger.error(f"Error fetching interview session {interview_id}: {str(e)}")
+        raise e
+    finally:
+        conn.close()
+
+def update_interview_session(interview_id: str, current_question_index: int, answers_list: list, completed: bool) -> None:
+    """
+    Updates the progress, answer list, and completion status of an active interview session.
+    """
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE interviews
+            SET current_question_index = ?, answers_json = ?, completed = ?
+            WHERE id = ?
+        """, (current_question_index, json.dumps(answers_list), 1 if completed else 0, interview_id))
+        conn.commit()
+        logger.info(f"Interview session {interview_id} updated. Current index: {current_question_index}. Completed: {completed}")
+    except Exception as e:
+        logger.error(f"Error updating interview session {interview_id}: {str(e)}")
+        raise e
+    finally:
+        conn.close()

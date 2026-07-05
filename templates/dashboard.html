@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Placement Readiness Dashboard - AI Campus Placement Agent</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-custom" href="/">
+        <i class="fa-solid fa-graduation-cap"></i> AI Campus <span>Placement Agent</span>
+      </a>
+      <div class="d-flex gap-2">
+        <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+          <i class="fa-solid fa-arrow-left me-1"></i> New Analysis
+        </a>
+        <a href="/download/{{ analysis_id }}" class="btn btn-custom-primary btn-sm rounded-pill px-3">
+          <i class="fa-solid fa-download me-1"></i> Download PDF Report
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <main class="container py-5 fade-in">
+    
+    <!-- Top Summary Card -->
+    <div class="card glass-card p-4 mb-4 border-0">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <span class="text-primary fw-semibold text-uppercase small">Placement Readiness Dashboard</span>
+          <h2 class="fw-bold mt-1 mb-2">Analysis Report: Target Company - {{ analysis.company_name }}</h2>
+          <p class="text-secondary mb-0">
+            Uploaded Resume: <b>{{ analysis.resume_filename }}</b> | Evaluated on: {{ analysis.created_at }}
+          </p>
+          <div class="alert alert-light border mt-3 mb-0 text-dark">
+            <i class="fa-solid fa-quote-left text-primary me-2"></i> {{ analysis.results.overall_recommendation_summary }}
+          </div>
+        </div>
+        
+        <!-- Score Gauges -->
+        <div class="col-md-4 mt-4 mt-md-0 d-flex flex-column align-items-center justify-content-center border-start border-md-none">
+          <!-- Circular ATS score -->
+          <div class="circular-progress-container mb-3">
+            <svg class="circular-progress-svg">
+              <circle class="circular-bg-ring" cx="75" cy="75" r="60"></circle>
+              <circle class="circular-fill-ring" cx="75" cy="75" r="60" data-score="{{ analysis.results.resume_analysis.ats_score }}"></circle>
+            </svg>
+            <div class="circular-progress-text">
+              <span class="fw-bold">{{ analysis.results.resume_analysis.ats_score }}</span>
+              <span class="circular-progress-label">ATS Score</span>
+            </div>
+          </div>
+          
+          <!-- Job Match score -->
+          <div class="w-75 text-center">
+            <div class="d-flex justify-content-between mb-1 small text-secondary">
+              <span>Job Match percentage:</span>
+              <span class="fw-bold text-primary">{{ analysis.results.job_match.match_percentage }}%</span>
+            </div>
+            <div class="progress rounded-pill" style="height: 10px;">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: {{ analysis.results.job_match.match_percentage }}%" aria-valuenow="{{ analysis.results.job_match.match_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card glass-card p-4 border-0 text-center h-100 justify-content-center">
+          <h5 class="fw-bold mb-2">Practice Live Mock Interviews</h5>
+          <p class="text-secondary small mb-3">Simulate a conversational technical, behavioral, and HR interview session customized for {{ analysis.company_name }} hiring standards.</p>
+          <a href="/interview/{{ analysis_id }}" class="btn btn-custom-primary py-2 px-4 rounded-pill mx-auto">
+            <i class="fa-solid fa-comments me-2"></i> Start Mock Interview Session
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card glass-card p-4 border-0 text-center h-100 justify-content-center">
+          <h5 class="fw-bold mb-2">Download Placement Guide</h5>
+          <p class="text-secondary small mb-3">Save your complete ATS evaluation details, roadmap layout milestones, and project goals to a print-friendly PDF report.</p>
+          <a href="/download/{{ analysis_id }}" class="btn btn-custom-outline py-2 px-4 rounded-pill mx-auto">
+            <i class="fa-solid fa-file-pdf me-2"></i> Download Complete PDF
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume Feedback Panel -->
+    <div class="row g-4 mb-4">
+      
+      <!-- Strengths & Weaknesses Accordion -->
+      <div class="col-lg-8">
+        <div class="card glass-card p-4 border-0 h-100">
+          <h4 class="fw-bold mb-4"><i class="fa-solid fa-file-pen text-primary me-2"></i> Resume Feedback Details</h4>
+          
+          <div class="accordion" id="resumeFeedbackAccordion">
+            
+            <div class="accordion-item border-0 mb-3 bg-light rounded-4 overflow-hidden">
+              <h2 class="accordion-header">
+                <button class="accordion-button bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStrengths" aria-expanded="true">
+                  <i class="fa-solid fa-circle-check text-success me-2"></i> Key Strengths
+                </button>
+              </h2>
+              <div id="collapseStrengths" class="accordion-collapse collapse show" data-bs-parent="#resumeFeedbackAccordion">
+                <div class="accordion-body bg-light-subtle">
+                  <ul class="mb-0">
+                    {% for strength in analysis.results.resume_analysis.strengths %}
+                      <li class="mb-2">{{ strength }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item border-0 mb-3 bg-light rounded-4 overflow-hidden">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWeaknesses">
+                  <i class="fa-solid fa-circle-xmark text-danger me-2"></i> Critical Weaknesses
+                </button>
+              </h2>
+              <div id="collapseWeaknesses" class="accordion-collapse collapse" data-bs-parent="#resumeFeedbackAccordion">
+                <div class="accordion-body bg-light-subtle">
+                  <ul class="mb-0">
+                    {% for weakness in analysis.results.resume_analysis.weaknesses %}
+                      <li class="mb-2 text-danger">{{ weakness }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item border-0 mb-3 bg-light rounded-4 overflow-hidden">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSuggestions">
+                  <i class="fa-solid fa-circle-info text-warning me-2"></i> Formatting & Grammar Tips
+                </button>
+              </h2>
+              <div id="collapseSuggestions" class="accordion-collapse collapse" data-bs-parent="#resumeFeedbackAccordion">
+                <div class="accordion-body bg-light-subtle">
+                  <h6 class="fw-bold text-secondary">Formatting Feedback:</h6>
+                  <ul>
+                    {% for suggestion in analysis.results.resume_analysis.formatting_suggestions %}
+                      <li class="mb-2">{{ suggestion }}</li>
+                    {% endfor %}
+                  </ul>
+                  <h6 class="fw-bold text-secondary mt-3">Grammar & Structure Suggestions:</h6>
+                  <ul>
+                    {% for suggestion in analysis.results.resume_analysis.grammar_suggestions %}
+                      <li class="mb-2">{{ suggestion }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item border-0 bg-light rounded-4 overflow-hidden">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProjectExp">
+                  <i class="fa-solid fa-briefcase text-primary me-2"></i> Project & Work Experience Feedback
+                </button>
+              </h2>
+              <div id="collapseProjectExp" class="accordion-collapse collapse" data-bs-parent="#resumeFeedbackAccordion">
+                <div class="accordion-body bg-light-subtle">
+                  <div class="mb-3">
+                    <h6 class="fw-bold text-secondary">Project Details Rating:</h6>
+                    <p class="mb-0">{{ analysis.results.resume_analysis.project_feedback }}</p>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold text-secondary">Professional Experience Rating:</h6>
+                    <p class="mb-0">{{ analysis.results.resume_analysis.experience_feedback }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Matching Adjustments -->
+      <div class="col-lg-4">
+        <div class="card glass-card p-4 border-0 h-100">
+          <h4 class="fw-bold mb-4"><i class="fa-solid fa-code-merge text-primary me-2"></i> Match Improvements</h4>
+          <h6 class="fw-bold text-secondary mb-3">Top 5 Resume Changes Required:</h6>
+          <ol class="list-group list-group-numbered list-group-flush mb-4">
+            {% for change in analysis.results.job_match.top_5_resume_changes %}
+              <li class="list-group-item d-flex justify-content-between align-items-start border-0 bg-transparent px-0 py-2">
+                <span class="ms-2 me-auto small fw-medium">{{ change }}</span>
+              </li>
+            {% endfor %}
+          </ol>
+          <hr/>
+          <h6 class="fw-bold text-secondary mb-3">Recommended Certifications:</h6>
+          <div class="d-flex flex-wrap gap-2">
+            {% for cert in analysis.results.job_match.required_certifications %}
+              <span class="badge bg-secondary-subtle text-primary border py-2 px-3 rounded-pill small">{{ cert }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Skill Gap Analysis Table -->
+    <div class="card glass-card p-4 border-0 mb-4">
+      <h4 class="fw-bold mb-4"><i class="fa-solid fa-triangle-exclamation text-primary me-2"></i> Skill Gap Analysis</h4>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Missing Skill</th>
+              <th>Importance</th>
+              <th>Learning Time</th>
+              <th>Learning Resource & Platform</th>
+              <th>Suggested Mini Project</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for gap in analysis.results.skill_gap %}
+              <tr>
+                <td><b class="text-primary">{{ gap.skill }}</b></td>
+                <td><span class="badge bg-light text-dark border">{{ gap.importance }}</span></td>
+                <td>{{ gap.learning_time }}</td>
+                <td><span class="text-secondary small">{{ gap.learning_resource }}</span></td>
+                <td><span class="small text-muted">{{ gap.project_suggestion }}</span></td>
+                <td>
+                  <span class="badge badge-pill-priority priority-{{ gap.priority|lower }}">
+                    {{ gap.priority }}
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Learning Roadmap Timeline -->
+    <div class="card glass-card p-4 border-0 mb-4">
+      <h4 class="fw-bold mb-4"><i class="fa-solid fa-route text-primary me-2"></i> 6-Week Learning Roadmap</h4>
+      <div class="timeline-wrapper">
+        {% for w in analysis.results.learning_roadmap %}
+          <div class="timeline-node">
+            <div class="card border-0 bg-light p-4 rounded-4 shadow-sm">
+              <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <h5 class="fw-bold mb-0 text-primary">{{ w.week }}</h5>
+                <span class="badge bg-primary text-white rounded-pill py-2 px-3">{{ w.estimated_hours }} Hours recommended</span>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <h6 class="fw-semibold text-secondary"><i class="fa-solid fa-book-open me-2 text-primary"></i> Topics to Learn</h6>
+                  <ul class="mb-3 small">
+                    {% for topic in w.topics %}
+                      <li>{{ topic }}</li>
+                    {% endfor %}
+                  </ul>
+                  <h6 class="fw-semibold text-secondary"><i class="fa-solid fa-code me-2 text-primary"></i> Coding Practice Tasks</h6>
+                  <ul class="mb-0 small">
+                    {% for code in w.coding_practice %}
+                      <li>{{ code }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="fw-semibold text-secondary"><i class="fa-solid fa-laptop-code me-2 text-primary"></i> Micro Projects</h6>
+                  <ul class="mb-3 small">
+                    {% for project in w.mini_projects %}
+                      <li>{{ project }}</li>
+                    {% endfor %}
+                  </ul>
+                  <h6 class="fw-semibold text-secondary"><i class="fa-solid fa-circle-question me-2 text-primary"></i> Interview Prep Questions</h6>
+                  <ul class="mb-0 small">
+                    {% for question in w.interview_questions %}
+                      <li>{{ question }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+              <div class="border-top mt-3 pt-3">
+                <h6 class="fw-semibold text-secondary"><i class="fa-solid fa-rotate-left me-2 text-primary"></i> Revision Tasks</h6>
+                <p class="mb-0 small text-secondary">
+                  {% for rev in w.revision_tasks %}
+                    {{ rev }}{% if not loop.last %}, {% endif %}
+                  {% endfor %}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-4">
+    <div class="container text-center text-secondary small">
+      © 2026 AI Campus Placement Agent. Developed for Kaggle AI Agents Intensive Course Capstone.
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

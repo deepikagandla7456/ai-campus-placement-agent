@@ -1,0 +1,17 @@
+# Local environment variables
+.env
+
+# SQLite databases
+*.db
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Local upload and compiled report folders
+uploads/
+reports/
+
+# IDE files
+.vscode/
+.idea/

@@ -1,0 +1,363 @@
+/* Modern Design System - AI Campus Placement Agent */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-blue: #1a73e8;
+  --primary-dark: #1557b0;
+  --secondary-light: #e8f0fe;
+  --bg-color: #f8f9fa;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --border-color: #dadce0;
+  --text-dark: #202124;
+  --text-secondary: #5f6368;
+  --success-green: #34a853;
+  --warning-yellow: #fbbc05;
+  --danger-red: #ea4335;
+  --shadow-light: 0 4px 12px rgba(26, 115, 232, 0.05);
+  --shadow-hover: 0 8px 24px rgba(26, 115, 232, 0.12);
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Glassmorphism utility */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-light);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Page Header & Navigation */
+.navbar-brand-custom {
+  font-weight: 700;
+  color: var(--primary-blue);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-brand-custom span {
+  color: var(--text-dark);
+}
+
+/* Circular ATS Gauge */
+.circular-progress-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+.circular-progress-svg {
+  width: 150px;
+  height: 150px;
+  transform: rotate(-90deg);
+}
+
+.circular-bg-ring {
+  fill: none;
+  stroke: var(--secondary-light);
+  stroke-width: 12;
+}
+
+.circular-fill-ring {
+  fill: none;
+  stroke: var(--primary-blue);
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.circular-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circular-progress-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-top: -4px;
+}
+
+/* Landing Page Hero */
+.hero-section {
+  padding: 80px 0 60px 0;
+  background: radial-gradient(circle at 80% 20%, var(--secondary-light) 0%, transparent 60%);
+}
+
+.hero-title {
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--primary-blue), #0d47a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
+
+/* Upload Forms */
+.upload-area {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 40px;
+  text-align: center;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: var(--primary-blue);
+  background: var(--secondary-light);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: var(--primary-blue);
+  margin-bottom: 15px;
+}
+
+/* Step-by-Step Agent Progress Overlay */
+.progress-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-panel {
+  width: 100%;
+  max-width: 480px;
+  padding: 30px;
+}
+
+.progress-steps-list {
+  list-style: none;
+  margin: 30px 0;
+  padding: 0;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.progress-step.completed {
+  color: var(--success-green);
+}
+
+.progress-step.active {
+  color: var(--primary-blue);
+}
+
+.step-indicator {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.progress-step.completed .step-indicator {
+  border-color: var(--success-green);
+  background: var(--success-green);
+  color: white;
+}
+
+.progress-step.active .step-indicator {
+  border-color: var(--primary-blue);
+  background: white;
+  animation: pulse-ring 1.5s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(26, 115, 232, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(26, 115, 232, 0); }
+}
+
+/* Timeline Components */
+.timeline-wrapper {
+  position: relative;
+  padding-left: 30px;
+  margin: 20px 0;
+}
+
+.timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  width: 2px;
+  height: 100%;
+  background: var(--border-color);
+}
+
+.timeline-node {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-node::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -25px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  border: 2px solid white;
+  box-shadow: 0 0 0 4px var(--secondary-light);
+}
+
+/* Badge styling */
+.badge-pill-priority {
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.priority-high { background-color: #fce8e6; color: var(--danger-red); }
+.priority-medium { background-color: #fef7e0; color: var(--warning-yellow); }
+.priority-low { background-color: #e6f4ea; color: var(--success-green); }
+
+/* Interactive Chat Simulation for Interview */
+.chat-window {
+  height: 480px;
+  overflow-y: auto;
+  border-radius: var(--border-radius-md);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.chat-bubble {
+  max-width: 75%;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: var(--border-radius-md);
+}
+
+.chat-bubble-agent {
+  background: var(--secondary-light);
+  color: var(--text-dark);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-bubble-user {
+  background: var(--primary-blue);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
+}
+
+.interview-dashboard-scores {
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+/* Buttons */
+.btn-custom-primary {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: white;
+  border-radius: var(--border-radius-sm);
+  padding: 10px 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-custom-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-custom-outline {
+  border: 2px solid var(--primary-blue);
+  background: transparent;
+  color: var(--primary-blue);
+  border-radius: var(--border-radius-sm);
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-custom-outline:hover {
+  background: var(--secondary-light);
+  color: var(--primary-blue);
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

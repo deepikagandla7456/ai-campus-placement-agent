@@ -1,0 +1,74 @@
+{
+  "Google": {
+    "overview": "Google is a global technology leader focusing on search, cloud computing, online advertising technologies, and hardware, renowned for its highly engineering-driven culture.",
+    "hiring_process": "Typically consists of an Online Coding Assessment, followed by 3-4 Technical Rounds focusing on core DSA and System Design, ending with a 'Googleyness' (behavioral) round.",
+    "technical_rounds": "In-depth testing on Data Structures & Algorithms, complex problem solving, space/time complexity optimization, and system design for scale.",
+    "hr_rounds": "Focuses on 'Googleyness'—assessing cognitive ability, leadership, cultural fit, ethics, and collaboration in ambiguous situations.",
+    "frequent_topics": ["Graph Algorithms (BFS/DFS, Dijkstra)", "Dynamic Programming", "Trees & Tries", "Hash Tables", "System Design (Scalability, Caching, Databases)"],
+    "required_skills": ["Python, C++, or Java", "Advanced Data Structures & Algorithms", "Strong Computer Science fundamentals (OS, Networks)", "System Architecture"],
+    "prep_tips": "Practice medium-to-hard LeetCode problems, write clean code on paper/whiteboard, explain your thought process aloud, and study Google's leadership principles."
+  },
+  "Microsoft": {
+    "overview": "Microsoft is a multinational technology corporation that produces computer software, consumer electronics, personal computers, and cloud services (Azure).",
+    "hiring_process": "Consists of an Online Assessment (OA) with coding questions, followed by 3-4 Technical Interview rounds, and an final interview with a Hiring Manager.",
+    "technical_rounds": "Algorithms, system design, coding correctness, edge case handling, and computer science fundamentals (OS, DB, Threads).",
+    "hr_rounds": "Assesses growth mindset, passion for technology, communication skills, adaptability, and collaboration within diverse teams.",
+    "frequent_topics": ["Binary Trees & BST", "Linked Lists", "Arrays & Strings manipulation", "System Design", "Object-Oriented Programming (OOP)"],
+    "required_skills": ["C#, C++, or Java", "Data Structures & Algorithms", "Cloud Architecture (Azure concepts)", "Object-Oriented Design (OOD)"],
+    "prep_tips": "Focus on solid software design, review basic data structure implementations, practice system design basics, and demonstrate Microsoft's core value: a growth mindset."
+  },
+  "Amazon": {
+    "overview": "Amazon is an e-commerce, cloud computing (AWS), digital streaming, and artificial intelligence giant, driven by customer obsession and operational excellence.",
+    "hiring_process": "Consists of an Online Assessment (Coding + Work Style Simulation), followed by 3-4 Technical Rounds where Leadership Principles are heavily integrated.",
+    "technical_rounds": "Deep dive into DSA, coding efficiency, object-oriented design, and system architecture for large scale systems.",
+    "hr_rounds": "Amazon does not have standard HR rounds; instead, every technical round incorporates questions testing the 16 Leadership Principles using the STAR method.",
+    "frequent_topics": ["Arrays & Strings", "Trees & Recursion", "System Design", "System integration & API design", "16 Amazon Leadership Principles"],
+    "required_skills": ["Java, Python, or C++", "Object Oriented Design (OOD)", "Scalable System Design", "SQL & NoSQL Database concepts"],
+    "prep_tips": "Prepare 2-3 detailed behavioral stories for each of Amazon's Leadership Principles using the STAR (Situation, Task, Action, Result) method. Practice coding under time limits."
+  },
+  "TCS": {
+    "overview": "Tata Consultancy Services (TCS) is an Indian multinational information technology services and consulting company, one of the largest IT service brands globally.",
+    "hiring_process": "Typically conducted through TCS NQT (National Qualifier Test) containing Cognitive & Technical sections, followed by Technical, Managerial, and HR interview rounds.",
+    "technical_rounds": "Tests programming basics, database queries (SQL), computer network concepts, software engineering cycles, and simple coding tasks.",
+    "hr_rounds": "Checks willingness to relocate, shift flexibility, communication skills, career aspirations, and background verification details.",
+    "frequent_topics": ["Basic Programming (Loops, Recursion, Arrays)", "SQL Queries (JOINS, Group By)", "OOP Principles", "SDLC Models (Agile, Waterfall)"],
+    "required_skills": ["C, C++, Java, or Python", "Basic DBMS and SQL", "Basic Data Structures", "Good verbal and written communication"],
+    "prep_tips": "Practice TCS NQT mock tests, revise OOP concepts and basic SQL queries, prepare a clear self-introduction, and highlight your college academic projects."
+  },
+  "Infosys": {
+    "overview": "Infosys is a global leader in next-generation digital services and consulting, serving clients in over 50 countries.",
+    "hiring_process": "Conducted through InfyTQ or HackWithInfy, followed by a Technical Interview and an HR Interview.",
+    "technical_rounds": "Covers programming fundamentals, object-oriented programming, data structures, DBMS, and questions on your resume projects.",
+    "hr_rounds": "Assesses soft skills, behavioral traits, work ethic, willingness to learn new technologies, and relocation choices.",
+    "frequent_topics": ["Object-Oriented Programming (Inheritance, Polymorphism)", "SQL Queries", "Data Structures (Stack, Queue, Linked List)", "Web Development basics"],
+    "required_skills": ["Java, Python, or C#", "DBMS & SQL Concepts", "Basic Data Structures", "Project documentation knowledge"],
+    "prep_tips": "Be thorough with your resume projects and the technology stacks used. Revise basic database concepts and be confident in explaining your role in academic projects."
+  },
+  "Accenture": {
+    "overview": "Accenture is a professional services company specializing in digital, cloud, security, and strategy services on a global scale.",
+    "hiring_process": "Consists of an Cognitive & Technical Assessment, followed by a Coding Assessment, a Communication Assessment, and a final Technical + HR Interview.",
+    "technical_rounds": "Focuses on pseudo-codes, MS Office basics, network fundamentals, cloud security concepts, basic programming, and final resume project discussions.",
+    "hr_rounds": "Evaluates candidate adaptability, team synergy, situational judgement, problem-solving mindset, and soft skills.",
+    "frequent_topics": ["Pseudo-code interpretation", "Basic networking & security", "Resume Projects", "Situational/Behavioral Questions"],
+    "required_skills": ["Basic programming knowledge", "Analytical & Logical reasoning", "Familiarity with cloud & digital services", "Strong communication skills"],
+    "prep_tips": "Practice solving pseudo-codes quickly, prepare for the automated communication assessment by speaking clearly, and structure your project details chronologically."
+  },
+  "Capgemini": {
+    "overview": "Capgemini is a French multinational information technology service and consulting company, specializing in engineering services, digital transformation, and cloud.",
+    "hiring_process": "Consists of a pseudo-code assessment, English communication assessment, game-based aptitude test, followed by technical and HR interview rounds.",
+    "technical_rounds": "Covers core programming, database concepts, data structures, cloud computing basics, and technical questions on academic internships/projects.",
+    "hr_rounds": "Assesses cultural fit, confidence, flexibility, work-ethics, and checks academic qualifications.",
+    "frequent_topics": ["OOP Concepts", "Basic SQL (DDL/DML)", "Data Structures (Arrays, Linked Lists)", "Resume-based project technologies"],
+    "required_skills": ["C, C++, Java or Python", "Basic SQL and Database concepts", "Aptitude and problem-solving skills", "Good communication"],
+    "prep_tips": "Prepare for the game-based aptitude test (which tests memory, concentration, and logical reasoning) and practice interpreting C/Java code snippets."
+  },
+  "Wipro": {
+    "overview": "Wipro Limited is a leading technology services and consulting company focused on building innovative solutions that address clients' most complex digital transformation needs.",
+    "hiring_process": "Conducted via Wipro Elite NLTH (National Level Talent Hunt) comprising Aptitude, Technical MCQs, and Coding, followed by Technical and HR interview rounds.",
+    "technical_rounds": "Covers basic data structures, OOPs, database management systems (DBMS), operating systems (OS), and simple programming problems.",
+    "hr_rounds": "Evaluates communication, adaptability, availability for shifts, relocation, and career commitment.",
+    "frequent_topics": ["String & Array Manipulation", "SQL Queries", "OOPs principles", "Computer networks basics"],
+    "required_skills": ["Java, C++, or Python", "SQL and DBMS", "Basic OS and Computer Networks", "Good English communication"],
+    "prep_tips": "Focus on coding basics like string operations and arrays. Ensure your fundamentals in DBMS, OS, and computer networks are clear, and highlight team achievements in your resume."
+  }
+}

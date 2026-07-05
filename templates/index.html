@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Campus Placement Agent - virtual placement mentor</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-custom" href="/">
+        <i class="fa-solid fa-graduation-cap"></i> AI Campus <span>Placement Agent</span>
+      </a>
+      <span class="badge bg-light text-primary border border-primary-subtle py-2 px-3 rounded-pill">Capstone Project</span>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <h1 class="hero-title">Prepare Smart.<br>Get Placed Faster.</h1>
+          <p class="hero-subtitle">
+            An intelligent multi-agent placement mentor that analyzes your resume, checks job description matches, suggests projects to bridge skill gaps, generates study roadmaps, and conducts interactive mock interviews.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2 text-secondary me-3">
+              <i class="fa-solid fa-check text-success"></i> ATS Score Analysis
+            </div>
+            <div class="d-flex align-items-center gap-2 text-secondary me-3">
+              <i class="fa-solid fa-check text-success"></i> Skill Gap Projects
+            </div>
+            <div class="d-flex align-items-center gap-2 text-secondary">
+              <i class="fa-solid fa-check text-success"></i> Live AI Mock Interviews
+            </div>
+          </div>
+        </div>
+        
+        <!-- Upload Form Container -->
+        <div class="col-lg-6">
+          <div class="card glass-card p-4">
+            <h4 class="fw-bold mb-4 text-center">Placement Analysis Workspace</h4>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form id="analysisForm" action="/analyze" method="POST" enctype="multipart/form-data">
+              
+              <!-- PDF Resume Upload Area -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold text-secondary">1. Upload Resume (PDF Only)</label>
+                <div class="upload-area" id="uploadArea">
+                  <i class="fa-solid fa-file-pdf upload-icon"></i>
+                  <p class="mb-1 fw-medium text-dark">Drag and drop your PDF resume here, or click to browse</p>
+                  <span class="text-muted small">Supports text-based PDF format</span>
+                  <input type="file" name="resume" id="resumeInput" accept=".pdf" class="d-none">
+                </div>
+              </div>
+
+              <!-- Job Description Input -->
+              <div class="mb-4">
+                <label for="jdInput" class="form-label fw-semibold text-secondary">2. Paste Job Description (Optional)</label>
+                <textarea name="job_description" id="jdInput" rows="4" class="form-control rounded-3" placeholder="Paste the job post description here to check your matching compatibility..."></textarea>
+              </div>
+
+              <!-- Target Company Select -->
+              <div class="mb-4">
+                <label for="companySelect" class="form-label fw-semibold text-secondary">3. Select Target Company</label>
+                <select name="company" id="companySelect" class="form-select rounded-3">
+                  <option value="General">General Placement Preparation</option>
+                  {% for c in companies %}
+                    <option value="{{ c }}">{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Submit button -->
+              <button type="submit" class="btn btn-custom-primary w-100 py-3 mt-2 fs-5">
+                <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Analyze Readiness
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Multi-Agent Features Section -->
+  <section class="py-5 border-top bg-white">
+    <div class="container">
+      <h3 class="fw-bold text-center mb-5">Powered by Specialized AI Agents</h3>
+      <div class="row g-4">
+        
+        <div class="col-md-4">
+          <div class="card h-100 border-0 bg-light p-4 rounded-4">
+            <div class="mb-3 text-primary fs-2"><i class="fa-solid fa-file-invoice"></i></div>
+            <h5 class="fw-bold">Resume Analysis Agent</h5>
+            <p class="text-secondary small mb-0">Analyzes resume formatting, projects, experiences, and calculates an ATS compatibility score with targeted improvements.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 border-0 bg-light p-4 rounded-4">
+            <div class="mb-3 text-primary fs-2"><i class="fa-solid fa-code-merge"></i></div>
+            <h5 class="fw-bold">Job Matching Agent</h5>
+            <p class="text-secondary small mb-0">Compares your skills and projects with target role job descriptions, generating exact match percentages and priority adjustments.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 border-0 bg-light p-4 rounded-4">
+            <div class="mb-3 text-primary fs-2"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h5 class="fw-bold">Skill Gap Agent</h5>
+            <p class="text-secondary small mb-0">Checks for missing skills, rates importance/learning complexity, and recommends custom learning pathways and micro-projects.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 border-0 bg-light p-4 rounded-4">
+            <div class="mb-3 text-primary fs-2"><i class="fa-solid fa-route"></i></div>
+            <h5 class="fw-bold">Learning Roadmap Agent</h5>
+            <p class="text-secondary small mb-0">Compiles a personalized 6-week preparation curriculum with estimated learning times, coding challenges, and weekly checkpoints.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 border-0 bg-light p-4 rounded-4">
+            <div class="mb-3 text-primary fs-2"><i class="fa-solid fa-comments"></i></div>
+            <h5 class="fw-bold">Mock Interview Agent</h5>
+            <p class="text-secondary small mb-0">Generates 15 tailored interview questions and evaluates your answers in real time, grading your accuracy, communication, and confidence.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 border-0 bg-light p-4 rounded-4">
+            <div class="mb-3 text-primary fs-2"><i class="fa-solid fa-circle-nodes"></i></div>
+            <h5 class="fw-bold">Coordinator Orchestrator</h5>
+            <p class="text-secondary small mb-0">Coordinates the workflow in a single API call to prevent rate limiting, feeding outputs into specialized agents for validation.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Progress Panel Overlay (Hidden by Default) -->
+  <div id="progressOverlay" class="progress-overlay d-none">
+    <div class="progress-panel glass-card text-center p-5">
+      <div class="spinner-border text-primary mb-4" role="status" style="width: 3rem; height: 3rem;"></div>
+      <h3 class="fw-bold text-dark">Coordinating AI Agents</h3>
+      <p class="text-secondary">Orchestrating multi-agent analysis in progress...</p>
+      
+      <ul class="progress-steps-list text-start">
+        <li class="progress-step" id="step1">
+          <div class="step-indicator">1</div>
+          <span>Resume Text Extracted Successfully</span>
+        </li>
+        <li class="progress-step text-muted" id="step2">
+          <div class="step-indicator">2</div>
+          <span>Resume Agent Analyzing ATS compatibility</span>
+        </li>
+        <li class="progress-step text-muted" id="step3">
+          <div class="step-indicator">3</div>
+          <span>Job Match Agent running description checks</span>
+        </li>
+        <li class="progress-step text-muted" id="step4">
+          <div class="step-indicator">4</div>
+          <span>Skill Gap Agent mapping course metrics</span>
+        </li>
+        <li class="progress-step text-muted" id="step5">
+          <div class="step-indicator">5</div>
+          <span>Roadmap Agent planning 6-week syllabus</span>
+        </li>
+        <li class="progress-step text-muted" id="step6">
+          <div class="step-indicator">6</div>
+          <span>Final Placement Analysis compiling</span>
+        </li>
+      </ul>
+      <p class="text-muted small">Please stand by. This takes around 5-10 seconds.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-4 mt-auto">
+    <div class="container text-center text-secondary small">
+      © 2026 AI Campus Placement Agent. Developed for Kaggle AI Agents Intensive Course Capstone.
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

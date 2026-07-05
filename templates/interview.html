@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive AI Mock Interview - AI Campus Placement Agent</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-custom" href="/">
+        <i class="fa-solid fa-graduation-cap"></i> AI Campus <span>Placement Agent</span>
+      </a>
+      <div>
+        <a href="/dashboard/{{ analysis_id }}" id="btnBackToDashboard" class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+          <i class="fa-solid fa-gauge me-1"></i> Return to Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Interview Simulator -->
+  <main class="container py-5 fade-in">
+    <div class="row g-4">
+      
+      <!-- Chat simulator window (Left 8 columns) -->
+      <div class="col-lg-8">
+        <div class="card glass-card p-4 border-0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">
+              <i class="fa-solid fa-comments text-primary me-2"></i> Mock Interview Simulator
+            </h4>
+            <span class="badge bg-light text-primary border rounded-pill py-2 px-3 small">
+              Target: {{ interview.questions[0].question|length|string|replace('0','')|truncate(6, True, '') or 'Placement' }}
+            </span>
+          </div>
+          
+          <!-- Chat area -->
+          <div class="chat-window d-flex flex-column" id="chatContainer">
+            <!-- Welcoming message -->
+            <div class="chat-bubble chat-bubble-agent">
+              <b>Interview Agent:</b> Welcome to your AI mock placement interview! I have compiled 15 tailored questions (5 HR, 5 Technical, and 5 Behavioral) based on your target company and skills. Speak clearly, explain your logic, and let's practice.
+            </div>
+
+            <!-- Populate history if page refreshed -->
+            {% for ans in interview.answers %}
+              <div class="chat-bubble chat-bubble-agent">
+                [<b>Question {{ ans.question_index + 1 }} - {{ ans.type }}</b>]<br/>
+                {{ ans.question }}
+              </div>
+              <div class="chat-bubble chat-bubble-user">
+                {{ ans.answer }}
+              </div>
+              <div class="chat-bubble chat-bubble-agent">
+                <b>Feedback:</b> {{ ans.evaluation.feedback }}<br/>
+                <b>Technical Accuracy:</b> {{ ans.evaluation.technical_accuracy }}/100<br/>
+                <b>Communication Score:</b> {{ ans.evaluation.communication_score }}/100<br/>
+                <b>Confidence Score:</b> {{ ans.evaluation.confidence_score }}/100<br/>
+                <b>Suggestions:</b>
+                <ul class="mb-0 mt-1">
+                  {% for sug in ans.evaluation.suggestions %}
+                    <li>{{ sug }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endfor %}
+
+            <!-- Display current active question if not completed -->
+            {% if not interview.completed %}
+              {% set current_q = interview.questions[interview.current_question_index] %}
+              <div class="chat-bubble chat-bubble-agent">
+                [<b>Question {{ current_q.index + 1 }} - {{ current_q.type }}</b>]<br/>
+                {{ current_q.question }}
+              </div>
+            {% else %}
+              <div class="chat-bubble chat-bubble-agent">
+                <b>Congratulations! You have completed all mock interview questions.</b><br/>
+                Please return to your dashboard to review overall scores and recommendations.
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Answer Input Form -->
+          {% if not interview.completed %}
+            <form id="chatForm" data-question-index="{{ interview.current_question_index }}" data-analysis-id="{{ analysis_id }}">
+              <div class="input-group">
+                <textarea id="answerInput" class="form-control rounded-start-3" rows="3" placeholder="Type your answer here... Be descriptive and structured (STAR method)."></textarea>
+                <button class="btn btn-custom-primary px-4 rounded-end-3" type="submit">Submit Answer</button>
+              </div>
+              <small class="text-muted d-block mt-2">Take your time. You can write multiple sentences. We grade technical correctness, communication structure, and confidence indicators.</small>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Right Score / Stats panel (Right 4 columns) -->
+      <div class="col-lg-4">
+        
+        <!-- Interview progress indicator card -->
+        <div class="card glass-card p-4 border-0 mb-4">
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-chart-line text-primary me-2"></i> Session Progress</h5>
+          
+          {% set ans_len = interview.answers|length %}
+          {% set progress_percentage = ((ans_len / 15) * 100)|round|int %}
+          
+          <div class="mb-2 d-flex justify-content-between small">
+            <span id="interviewProgressText">{{ ans_len }}/15 Questions Answered ({{ progress_percentage }}%)</span>
+          </div>
+          <div class="progress rounded-pill mb-3" style="height: 12px;">
+            <div id="interviewProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ progress_percentage }}%"></div>
+          </div>
+          <hr/>
+          <div class="small text-secondary">
+            <div class="d-flex justify-content-between mb-1">
+              <span>HR Questions:</span>
+              <span class="fw-bold text-dark">5 Questions</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+              <span>Technical Questions:</span>
+              <span class="fw-bold text-dark">5 Questions</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Behavioral Questions:</span>
+              <span class="fw-bold text-dark">5 Questions</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest response evaluation card -->
+        {% set last_eval = interview.answers[-1].evaluation if interview.answers else None %}
+        <div class="card glass-card p-4 border-0 {% if not last_eval %}d-none{% endif %}" id="evaluationPanel">
+          <h5 class="fw-bold mb-4"><i class="fa-solid fa-gauge-high text-primary me-2"></i> Response Evaluation</h5>
+          
+          <!-- Accuracy Gauge -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between mb-1 small">
+              <span class="fw-semibold">Technical Accuracy:</span>
+              <span class="fw-bold text-primary" id="techScore">{{ last_eval.technical_accuracy if last_eval else 0 }}%</span>
+            </div>
+            <div class="progress rounded-pill" style="height: 8px;">
+              <div id="techBar" class="progress-bar bg-primary" role="progressbar" style="width: {{ last_eval.technical_accuracy if last_eval else 0 }}%"></div>
+            </div>
+          </div>
+
+          <!-- Communication Gauge -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between mb-1 small">
+              <span class="fw-semibold">Communication Clarity:</span>
+              <span class="fw-bold text-success" id="commScore">{{ last_eval.communication_score if last_eval else 0 }}%</span>
+            </div>
+            <div class="progress rounded-pill" style="height: 8px;">
+              <div id="commBar" class="progress-bar bg-success" role="progressbar" style="width: {{ last_eval.communication_score if last_eval else 0 }}%"></div>
+            </div>
+          </div>
+
+          <!-- Confidence Gauge -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1 small">
+              <span class="fw-semibold">Confidence Indicator:</span>
+              <span class="fw-bold text-warning" id="confScore">{{ last_eval.confidence_score if last_eval else 0 }}%</span>
+            </div>
+            <div class="progress rounded-pill" style="height: 8px;">
+              <div id="confBar" class="progress-bar bg-warning" role="progressbar" style="width: {{ last_eval.confidence_score if last_eval else 0 }}%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-4 mt-auto">
+    <div class="container text-center text-secondary small">
+      © 2026 AI Campus Placement Agent. Developed for Kaggle AI Agents Intensive Course Capstone.
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
