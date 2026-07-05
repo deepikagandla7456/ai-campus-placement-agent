@@ -131,7 +131,7 @@ AI-Campus-Placement-Agent/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/ai-campus-placement-agent.git
+git clone https://github.com/deepikagandla7456/ai-campus-placement-agent.git
 cd ai-campus-placement-agent
 ```
 
